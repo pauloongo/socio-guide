@@ -14,14 +14,13 @@ const Home = () => {
   const [resultado, setResultado] = useState<number | null>(null);
 
   const { data: posts } = useQuery({
-    queryKey: ["featured-posts"],
+    queryKey: ["all-posts"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("posts")
         .select("*")
         .eq("published", true)
-        .order("date", { ascending: false })
-        .limit(3);
+        .order("date", { ascending: false });
       
       if (error) throw error;
       return data;
@@ -181,21 +180,35 @@ const Home = () => {
       {/* Posts em Destaque */}
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-center mb-12">Artigos em Destaque</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <h2 className="text-3xl font-bold text-center mb-12">Todos os Posts</h2>
+          <div className="grid md:grid-cols-3 gap-6">
             {posts?.map((post) => (
-              <Card key={post.id} className="shadow-card hover:shadow-lg transition-shadow">
+              <Card key={post.id} className="shadow-card hover:shadow-lg transition-all animate-fade-in">
+                {post.image_url && (
+                  <div className="w-full h-48 overflow-hidden rounded-t-lg">
+                    <img 
+                      src={post.image_url} 
+                      alt={post.title}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
                 <CardHeader>
                   <CardTitle className="line-clamp-2">{post.title}</CardTitle>
                   <CardDescription>
-                    {new Date(post.date).toLocaleDateString("pt-BR")}
+                    {new Date(post.date).toLocaleDateString("pt-BR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground line-clamp-3 mb-4">
-                    {post.content.substring(0, 150)}...
+                <CardContent className="space-y-4">
+                  <p className="text-muted-foreground line-clamp-3">
+                    {post.excerpt || post.content.replace(/<[^>]*>/g, "").substring(0, 150)}...
                   </p>
-                  <Button asChild variant="secondary">
+                  <Button asChild variant="secondary" className="w-full">
                     <Link to={`/blog/${post.slug}`}>Ler mais</Link>
                   </Button>
                 </CardContent>
@@ -203,11 +216,13 @@ const Home = () => {
             ))}
           </div>
           
-          <div className="text-center mt-12">
-            <Button asChild size="lg">
-              <Link to="/blog">Ver Todos os Artigos</Link>
-            </Button>
-          </div>
+          {posts && posts.length > 8 && (
+            <div className="text-center mt-8">
+              <Button asChild size="lg" variant="default">
+                <Link to="/blog">Ver Todos os Posts no Blog</Link>
+              </Button>
+            </div>
+          )}
         </div>
       </section>
     </div>

@@ -47,10 +47,14 @@ export type Database = {
       posts: {
         Row: {
           author_id: string | null
+          category: string | null
           content: string
           created_at: string | null
           date: string | null
+          excerpt: string | null
           id: string
+          image_url: string | null
+          keywords: string | null
           published: boolean | null
           slug: string
           title: string
@@ -58,10 +62,14 @@ export type Database = {
         }
         Insert: {
           author_id?: string | null
+          category?: string | null
           content: string
           created_at?: string | null
           date?: string | null
+          excerpt?: string | null
           id?: string
+          image_url?: string | null
+          keywords?: string | null
           published?: boolean | null
           slug: string
           title: string
@@ -69,10 +77,14 @@ export type Database = {
         }
         Update: {
           author_id?: string | null
+          category?: string | null
           content?: string
           created_at?: string | null
           date?: string | null
+          excerpt?: string | null
           id?: string
+          image_url?: string | null
+          keywords?: string | null
           published?: boolean | null
           slug?: string
           title?: string

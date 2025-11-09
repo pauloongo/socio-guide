@@ -1,45 +1,105 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { Helmet } from "react-helmet";
+import { useState } from "react";
 
 const Blog = () => {
-  const { data: posts, isLoading } = useQuery({
-    queryKey: ["posts"],
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "1");
+  const category = searchParams.get("category") || "todos";
+  const [selectedCategory, setSelectedCategory] = useState(category);
+  
+  const POSTS_PER_PAGE = 10;
+
+  const { data: allPosts, isLoading } = useQuery({
+    queryKey: ["posts", selectedCategory],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("posts")
-        .select("*")
-        .eq("published", true)
-        .order("date", { ascending: false });
+        .select("*", { count: 'exact' })
+        .eq("published", true);
+      
+      if (selectedCategory !== "todos") {
+        query = query.eq("category", selectedCategory);
+      }
+      
+      query = query.order("date", { ascending: false });
+      
+      const { data, error, count } = await query;
       
       if (error) throw error;
-      return data;
+      return { posts: data, total: count || 0 };
     },
   });
 
-  return (
-    <div className="min-h-screen bg-background">
-      <header className="bg-gradient-hero py-12 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <Button asChild variant="outline" className="mb-6 bg-white/10 border-white/30 text-white hover:bg-white/20">
-            <Link to="/">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar
-            </Link>
-          </Button>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground">Blog</h1>
-          <p className="text-lg text-primary-foreground/90 mt-2">
-            Informações atualizadas sobre benefícios sociais
-          </p>
-        </div>
-      </header>
+  const totalPages = allPosts ? Math.ceil(allPosts.total / POSTS_PER_PAGE) : 0;
+  const posts = allPosts?.posts.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
 
-      <main className="py-16 px-4">
-        <div className="container mx-auto max-w-6xl">
-          {isLoading ? (
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+    setSearchParams({ category: value, page: "1" });
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setSearchParams({ category: selectedCategory, page: newPage.toString() });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <>
+      <Helmet>
+        <title>Blog Benefícios Sociais 2025 | Todos os Posts</title>
+        <meta name="description" content="Descubra guias atualizados sobre Bolsa Família, INSS e BPC LOAS. Simuladores grátis e tabelas 2025." />
+        <meta name="keywords" content="benefícios sociais 2025, bolsa família novembro, inss simulador, bpc loas requisitos, aposentadoria regras" />
+      </Helmet>
+      
+      <div className="min-h-screen bg-background">
+        <header className="bg-gradient-hero py-12 px-4">
+          <div className="container mx-auto max-w-6xl">
+            <Button asChild variant="outline" className="mb-6 bg-white/10 border-white/30 text-white hover:bg-white/20">
+              <Link to="/">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Voltar
+              </Link>
+            </Button>
+            <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground">Blog</h1>
+            <p className="text-lg text-primary-foreground/90 mt-2">
+              Informações atualizadas sobre benefícios sociais
+            </p>
+          </div>
+        </header>
+
+        <main className="py-16 px-4">
+          <div className="container mx-auto max-w-6xl">
+            <div className="mb-8 flex justify-between items-center">
+              <div className="flex items-center gap-4">
+                <label className="text-sm font-medium">Filtrar por categoria:</label>
+                <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+                  <SelectTrigger className="w-[200px]">
+                    <SelectValue placeholder="Selecione uma categoria" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="todos">Todos</SelectItem>
+                    <SelectItem value="bolsa-familia">Bolsa Família</SelectItem>
+                    <SelectItem value="inss">INSS</SelectItem>
+                    <SelectItem value="bpc">BPC</SelectItem>
+                    <SelectItem value="outros">Outros</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {allPosts && (
+                <p className="text-sm text-muted-foreground">
+                  {allPosts.total} {allPosts.total === 1 ? 'post encontrado' : 'posts encontrados'}
+                </p>
+              )}
+            </div>
+
+            {isLoading ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3].map((i) => (
                 <Card key={i} className="shadow-card animate-pulse">
@@ -53,41 +113,91 @@ const Blog = () => {
                 </Card>
               ))}
             </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {posts?.map((post) => (
-                <Card key={post.id} className="shadow-card hover:shadow-lg transition-all animate-fade-in">
-                  <CardHeader>
-                    <CardTitle className="line-clamp-2">{post.title}</CardTitle>
-                    <CardDescription>
-                      {new Date(post.date).toLocaleDateString("pt-BR", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-muted-foreground line-clamp-3">
-                      {post.content.replace(/<[^>]*>/g, "").substring(0, 150)}...
-                    </p>
-                    <Button asChild variant="secondary" className="w-full">
-                      <Link to={`/blog/${post.slug}`}>Ler artigo completo</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
+            ) : (
+              <>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {posts?.map((post) => (
+                    <Card key={post.id} className="shadow-card hover:shadow-lg transition-all animate-fade-in">
+                      {post.image_url && (
+                        <div className="w-full h-48 overflow-hidden rounded-t-lg">
+                          <img 
+                            src={post.image_url} 
+                            alt={post.title}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                      )}
+                      <CardHeader>
+                        <CardTitle className="line-clamp-2">{post.title}</CardTitle>
+                        <CardDescription>
+                          {new Date(post.date).toLocaleDateString("pt-BR", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          })}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <p className="text-muted-foreground line-clamp-3">
+                          {post.excerpt || post.content.replace(/<[^>]*>/g, "").substring(0, 150)}...
+                        </p>
+                        <Button asChild variant="secondary" className="w-full">
+                          <Link to={`/blog/${post.slug}`}>Ler artigo completo</Link>
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
 
-          {posts && posts.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground text-lg">Nenhum post publicado ainda.</p>
-            </div>
-          )}
-        </div>
-      </main>
-    </div>
+                {totalPages > 1 && (
+                  <div className="flex justify-center items-center gap-2 mt-12">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handlePageChange(page - 1)}
+                      disabled={page === 1}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    
+                    <div className="flex gap-2">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                        <Button
+                          key={pageNum}
+                          variant={page === pageNum ? "default" : "outline"}
+                          size="icon"
+                          onClick={() => handlePageChange(pageNum)}
+                        >
+                          {pageNum}
+                        </Button>
+                      ))}
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handlePageChange(page + 1)}
+                      disabled={page === totalPages}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+
+            {posts && posts.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground text-lg">
+                  Nenhum post encontrado para esta categoria.
+                </p>
+              </div>
+            )}
+          </div>
+        </main>
+      </div>
+    </>
   );
 };
 

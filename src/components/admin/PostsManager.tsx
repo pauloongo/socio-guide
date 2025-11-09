@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Plus, Edit, Trash2, Eye } from "lucide-react";
 import {
@@ -24,6 +25,10 @@ interface Post {
   content: string;
   published: boolean;
   date: string;
+  excerpt?: string;
+  keywords?: string;
+  category?: string;
+  image_url?: string;
 }
 
 const PostsManager = () => {
@@ -34,6 +39,11 @@ const PostsManager = () => {
     slug: "",
     content: "",
     published: false,
+    date: new Date().toISOString().split("T")[0],
+    excerpt: "",
+    keywords: "",
+    category: "outros",
+    image_url: "",
   });
 
   const queryClient = useQueryClient();
@@ -97,7 +107,17 @@ const PostsManager = () => {
   });
 
   const resetForm = () => {
-    setFormData({ title: "", slug: "", content: "", published: false });
+    setFormData({
+      title: "",
+      slug: "",
+      content: "",
+      published: false,
+      date: new Date().toISOString().split("T")[0],
+      excerpt: "",
+      keywords: "",
+      category: "outros",
+      image_url: "",
+    });
     setEditingPost(null);
     setIsDialogOpen(false);
   };
@@ -109,6 +129,11 @@ const PostsManager = () => {
       slug: post.slug,
       content: post.content,
       published: post.published,
+      date: post.date.split("T")[0],
+      excerpt: post.excerpt || "",
+      keywords: post.keywords || "",
+      category: post.category || "outros",
+      image_url: post.image_url || "",
     });
     setIsDialogOpen(true);
   };
@@ -137,7 +162,7 @@ const PostsManager = () => {
             <DialogHeader>
               <DialogTitle>{editingPost ? "Editar Post" : "Novo Post"}</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
               <div className="space-y-2">
                 <Label htmlFor="title">Título</Label>
                 <Input
@@ -158,6 +183,55 @@ const PostsManager = () => {
                 />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="excerpt">Resumo (até 160 caracteres)</Label>
+                <Textarea
+                  id="excerpt"
+                  value={formData.excerpt}
+                  onChange={(e) => setFormData({ ...formData, excerpt: e.target.value.substring(0, 160) })}
+                  className="min-h-[80px]"
+                  placeholder="Resumo curto para SEO e preview"
+                  maxLength={160}
+                />
+                <p className="text-xs text-muted-foreground">{formData.excerpt.length}/160 caracteres</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="keywords">Palavras-chave (separadas por vírgula)</Label>
+                <Textarea
+                  id="keywords"
+                  value={formData.keywords}
+                  onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
+                  className="min-h-[60px]"
+                  placeholder="benefícios sociais 2025, bolsa família, inss"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="category">Categoria</Label>
+                <Select 
+                  value={formData.category} 
+                  onValueChange={(value) => setFormData({ ...formData, category: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione uma categoria" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="bolsa-familia">Bolsa Família</SelectItem>
+                    <SelectItem value="inss">INSS</SelectItem>
+                    <SelectItem value="bpc">BPC</SelectItem>
+                    <SelectItem value="outros">Outros</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="image_url">URL da Imagem</Label>
+                <Input
+                  id="image_url"
+                  value={formData.image_url}
+                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                  placeholder="https://exemplo.com/imagem.jpg"
+                />
+                <p className="text-xs text-muted-foreground">Cole a URL de uma imagem externa</p>
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="content">Conteúdo (HTML)</Label>
                 <Textarea
                   id="content"
@@ -165,6 +239,16 @@ const PostsManager = () => {
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                   rows={15}
                   className="font-mono text-sm"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="date">Data</Label>
+                <Input
+                  id="date"
+                  type="date"
+                  value={formData.date}
+                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                   required
                 />
               </div>
@@ -176,7 +260,7 @@ const PostsManager = () => {
                 />
                 <Label htmlFor="published">Publicado</Label>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 pt-4 border-t">
                 <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
                   {editingPost ? "Atualizar" : "Criar"}
                 </Button>
@@ -209,7 +293,9 @@ const PostsManager = () => {
                       </span>
                     )}
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground mt-1">/{post.slug}</p>
+                  <CardDescription className="mt-1">
+                    /{post.slug} • {post.category || "outros"}
+                  </CardDescription>
                 </div>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" asChild>
@@ -233,10 +319,20 @@ const PostsManager = () => {
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-2">
+                {post.image_url && (
+                  <div className="w-full h-32 overflow-hidden rounded-md mb-2">
+                    <img src={post.image_url} alt={post.title} className="w-full h-full object-cover" />
+                  </div>
+                )}
                 <p className="text-sm text-muted-foreground line-clamp-2">
-                  {post.content.replace(/<[^>]*>/g, "").substring(0, 150)}...
+                  {post.excerpt || post.content.replace(/<[^>]*>/g, "").substring(0, 150)}...
                 </p>
+                {post.keywords && (
+                  <p className="text-xs text-muted-foreground italic">
+                    Keywords: {post.keywords.substring(0, 80)}...
+                  </p>
+                )}
               </CardContent>
             </Card>
           ))}
