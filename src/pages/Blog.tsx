@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { Helmet } from "react-helmet";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import Header from "@/components/Header";
 
 const Blog = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,7 +23,7 @@ const Blog = () => {
     queryFn: async () => {
       let query = supabase
         .from("posts")
-        .select("*", { count: 'exact' })
+        .select("*, authors(name, bio, photo_url)", { count: 'exact' })
         .eq("published", true);
       
       if (selectedCategory !== "todos") {
@@ -59,6 +61,7 @@ const Blog = () => {
       </Helmet>
       
       <div className="min-h-screen bg-background">
+        <Header />
         <header className="bg-gradient-hero py-12 px-4">
           <div className="container mx-auto max-w-6xl">
             <Button asChild variant="outline" className="mb-6 bg-white/10 border-white/30 text-white hover:bg-white/20">
@@ -85,10 +88,11 @@ const Blog = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="todos">Todos</SelectItem>
-                    <SelectItem value="bolsa-familia">Bolsa Família</SelectItem>
-                    <SelectItem value="inss">INSS</SelectItem>
-                    <SelectItem value="bpc">BPC</SelectItem>
-                    <SelectItem value="outros">Outros</SelectItem>
+                    <SelectItem value="Bolsa Família">Bolsa Família</SelectItem>
+                    <SelectItem value="INSS Aposentadoria">INSS Aposentadoria</SelectItem>
+                    <SelectItem value="BPC LOAS">BPC LOAS</SelectItem>
+                    <SelectItem value="Auxílio Gás">Auxílio Gás</SelectItem>
+                    <SelectItem value="Outros">Outros</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -129,13 +133,12 @@ const Blog = () => {
                         </div>
                       )}
                       <CardHeader>
+                        <div className="flex gap-2 mb-2">
+                          <Badge variant="secondary">{post.category || "Outros"}</Badge>
+                        </div>
                         <CardTitle className="line-clamp-2">{post.title}</CardTitle>
                         <CardDescription>
-                          {new Date(post.date).toLocaleDateString("pt-BR", {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                          })}
+                          Por {(post as any).authors?.name || "Anônimo"} • {new Date(post.date).toLocaleDateString("pt-BR")}
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-4">

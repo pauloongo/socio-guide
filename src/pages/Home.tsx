@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Badge } from "@/components/ui/badge";
+import Header from "@/components/Header";
 
 const Home = () => {
   const [renda, setRenda] = useState("");
@@ -18,7 +20,7 @@ const Home = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("posts")
-        .select("*")
+        .select("*, authors(name, bio, photo_url)")
         .eq("published", true)
         .order("date", { ascending: false });
       
@@ -50,6 +52,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-hero py-20 px-4">
         <div className="container mx-auto max-w-6xl">
@@ -195,13 +198,12 @@ const Home = () => {
                   </div>
                 )}
                 <CardHeader>
+                  <div className="flex gap-2 mb-2">
+                    <Badge variant="secondary">{post.category || "Outros"}</Badge>
+                  </div>
                   <CardTitle className="line-clamp-2">{post.title}</CardTitle>
                   <CardDescription>
-                    {new Date(post.date).toLocaleDateString("pt-BR", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })}
+                    Por {(post as any).authors?.name || "Anônimo"} • {new Date(post.date).toLocaleDateString("pt-BR")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">

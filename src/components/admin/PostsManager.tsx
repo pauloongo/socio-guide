@@ -29,6 +29,14 @@ interface Post {
   keywords?: string;
   category?: string;
   image_url?: string;
+  author_id?: string;
+}
+
+interface Author {
+  id: string;
+  name: string;
+  bio: string;
+  photo_url?: string;
 }
 
 const PostsManager = () => {
@@ -42,8 +50,9 @@ const PostsManager = () => {
     date: new Date().toISOString().split("T")[0],
     excerpt: "",
     keywords: "",
-    category: "outros",
+    category: "Bolsa Família",
     image_url: "",
+    author_id: "",
   });
 
   const queryClient = useQueryClient();
@@ -53,11 +62,24 @@ const PostsManager = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("posts")
-        .select("*")
+        .select("*, authors(name, bio, photo_url)")
         .order("date", { ascending: false });
       
       if (error) throw error;
-      return data;
+      return data as Post[];
+    },
+  });
+
+  const { data: authors } = useQuery({
+    queryKey: ["authors"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("authors")
+        .select("*")
+        .order("name");
+      
+      if (error) throw error;
+      return data as Author[];
     },
   });
 
@@ -115,8 +137,9 @@ const PostsManager = () => {
       date: new Date().toISOString().split("T")[0],
       excerpt: "",
       keywords: "",
-      category: "outros",
+      category: "Bolsa Família",
       image_url: "",
+      author_id: "",
     });
     setEditingPost(null);
     setIsDialogOpen(false);
@@ -132,8 +155,9 @@ const PostsManager = () => {
       date: post.date.split("T")[0],
       excerpt: post.excerpt || "",
       keywords: post.keywords || "",
-      category: post.category || "outros",
+      category: post.category || "Bolsa Família",
       image_url: post.image_url || "",
+      author_id: post.author_id || "",
     });
     setIsDialogOpen(true);
   };
@@ -206,18 +230,38 @@ const PostsManager = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="category">Categoria</Label>
-                <Select 
-                  value={formData.category} 
+                <Select
+                  value={formData.category}
                   onValueChange={(value) => setFormData({ ...formData, category: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione uma categoria" />
+                    <SelectValue placeholder="Selecione a categoria" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="bolsa-familia">Bolsa Família</SelectItem>
-                    <SelectItem value="inss">INSS</SelectItem>
-                    <SelectItem value="bpc">BPC</SelectItem>
-                    <SelectItem value="outros">Outros</SelectItem>
+                    <SelectItem value="Bolsa Família">Bolsa Família</SelectItem>
+                    <SelectItem value="INSS Aposentadoria">INSS Aposentadoria</SelectItem>
+                    <SelectItem value="BPC LOAS">BPC LOAS</SelectItem>
+                    <SelectItem value="Auxílio Gás">Auxílio Gás</SelectItem>
+                    <SelectItem value="Outros">Outros</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="author_id">Autor</Label>
+                <Select
+                  value={formData.author_id}
+                  onValueChange={(value) => setFormData({ ...formData, author_id: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o autor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {authors?.map((author) => (
+                      <SelectItem key={author.id} value={author.id}>
+                        {author.name} - {author.bio.substring(0, 40)}...
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -294,8 +338,11 @@ const PostsManager = () => {
                     )}
                   </CardTitle>
                   <CardDescription className="mt-1">
-                    /{post.slug} • {post.category || "outros"}
+                    /{post.slug} • {post.category || "Outros"}
                   </CardDescription>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Autor: {(post as any).authors?.name || "Não definido"}
+                  </p>
                 </div>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" asChild>

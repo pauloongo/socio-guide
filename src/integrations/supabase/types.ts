@@ -44,6 +44,30 @@ export type Database = {
         }
         Relationships: []
       }
+      authors: {
+        Row: {
+          bio: string
+          created_at: string | null
+          id: string
+          name: string
+          photo_url: string | null
+        }
+        Insert: {
+          bio: string
+          created_at?: string | null
+          id?: string
+          name: string
+          photo_url?: string | null
+        }
+        Update: {
+          bio?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+          photo_url?: string | null
+        }
+        Relationships: []
+      }
       posts: {
         Row: {
           author_id: string | null
