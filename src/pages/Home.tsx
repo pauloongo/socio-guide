@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
+import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 
 const Home = () => {
@@ -51,8 +52,30 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <>
+      <Helmet>
+        <title>Auxílios BR 2025 | Simulador Bolsa Família, INSS e BPC LOAS</title>
+        <meta name="description" content="Guia completo de benefícios sociais 2025. Simule Bolsa Família, INSS e BPC grátis. Informações atualizadas sobre seus direitos." />
+        <meta name="keywords" content="benefícios sociais 2025, bolsa família simulador, inss aposentadoria, bpc loas, auxílios brasil, simulador grátis" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Auxílios BR 2025 | Simulador Bolsa Família, INSS e BPC LOAS" />
+        <meta property="og:description" content="Guia completo de benefícios sociais 2025. Simule Bolsa Família, INSS e BPC grátis." />
+        <meta property="og:image" content="/placeholder.svg" />
+        <meta property="og:type" content="website" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Auxílios BR 2025 | Simulador Bolsa Família, INSS e BPC LOAS" />
+        <meta name="twitter:description" content="Guia completo de benefícios sociais 2025. Simule Bolsa Família, INSS e BPC grátis." />
+        <meta name="twitter:image" content="/placeholder.svg" />
+        
+        {/* Canonical */}
+        <link rel="canonical" href={window.location.href} />
+      </Helmet>
+
+      <div className="min-h-screen bg-background">
+        <Header />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-hero py-20 px-4">
         <div className="container mx-auto max-w-6xl">
@@ -227,7 +250,8 @@ const Home = () => {
           )}
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 };
 
