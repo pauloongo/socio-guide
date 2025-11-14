@@ -55,9 +55,24 @@ const Blog = () => {
   return (
     <>
       <Helmet>
-        <title>Blog Benefícios Sociais 2025 | Todos os Posts</title>
+        <title>Blog Benefícios Sociais 2025 | Guias Atualizados</title>
         <meta name="description" content="Descubra guias atualizados sobre Bolsa Família, INSS e BPC LOAS. Simuladores grátis e tabelas 2025." />
         <meta name="keywords" content="benefícios sociais 2025, bolsa família novembro, inss simulador, bpc loas requisitos, aposentadoria regras" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Blog Benefícios Sociais 2025 | Guias Atualizados" />
+        <meta property="og:description" content="Descubra guias atualizados sobre Bolsa Família, INSS e BPC LOAS. Simuladores grátis e tabelas 2025." />
+        <meta property="og:image" content="/placeholder.svg" />
+        <meta property="og:type" content="website" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Blog Benefícios Sociais 2025 | Guias Atualizados" />
+        <meta name="twitter:description" content="Descubra guias atualizados sobre Bolsa Família, INSS e BPC LOAS. Simuladores grátis e tabelas 2025." />
+        <meta name="twitter:image" content="/placeholder.svg" />
+        
+        {/* Canonical */}
+        <link rel="canonical" href={window.location.href} />
       </Helmet>
       
       <div className="min-h-screen bg-background">

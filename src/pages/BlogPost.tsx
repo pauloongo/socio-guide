@@ -69,6 +69,9 @@ const BlogPost = () => {
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={post.image_url || '/placeholder.svg'} />
         
+        {/* Canonical */}
+        <link rel="canonical" href={window.location.href} />
+        
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
