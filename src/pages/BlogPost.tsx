@@ -8,6 +8,7 @@ import AdSlot from "@/components/AdSlot";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Header from "@/components/Header";
+import DOMPurify from "dompurify";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -148,7 +149,12 @@ const BlogPost = () => {
             
             <article 
               className="prose prose-lg max-w-none mt-8 prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground prose-a:text-primary hover:prose-a:text-primary/80"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ 
+                __html: DOMPurify.sanitize(post.content, {
+                  ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'strong', 'em', 'ul', 'ol', 'li', 'img', 'blockquote', 'code', 'pre', 'br', 'hr', 'span', 'div', 'b', 'i', 'u'],
+                  ALLOWED_ATTR: ['href', 'src', 'alt', 'class', 'id', 'target', 'rel', 'title']
+                })
+              }}
             />
 
             <AdSlot pageSlug={`/blog/${slug}`} position="meio" className="my-12" />

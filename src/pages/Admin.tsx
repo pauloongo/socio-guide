@@ -4,12 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogOut } from "lucide-react";
+import { LogOut, ShieldAlert } from "lucide-react";
 import PostsManager from "@/components/admin/PostsManager";
 import AdsManager from "@/components/admin/AdsManager";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Admin = () => {
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,7 +22,22 @@ const Admin = () => {
         navigate("/auth");
         return;
       }
-      
+
+      // Check if user has admin role
+      const { data: roles, error } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+
+      if (error || !roles) {
+        setIsAdmin(false);
+        setLoading(false);
+        return;
+      }
+
+      setIsAdmin(true);
       setLoading(false);
     };
 
@@ -29,6 +46,8 @@ const Admin = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session) {
         navigate("/auth");
+      } else {
+        checkAuth();
       }
     });
 
@@ -45,6 +64,39 @@ const Admin = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse text-muted-foreground">Carregando...</div>
+      </div>
+    );
+  }
+
+  // Show access denied if user is not admin
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <div className="flex items-center gap-2 text-destructive">
+              <ShieldAlert className="h-6 w-6" />
+              <CardTitle>Acesso Negado</CardTitle>
+            </div>
+            <CardDescription>
+              Você não tem permissão para acessar o painel administrativo.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Apenas usuários com função de administrador podem acessar esta área.
+              Se você acredita que deveria ter acesso, entre em contato com o administrador do sistema.
+            </p>
+            <div className="flex gap-2">
+              <Button onClick={() => navigate("/")} variant="outline" className="flex-1">
+                Voltar ao Início
+              </Button>
+              <Button onClick={handleSignOut} variant="default" className="flex-1">
+                Sair
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
