@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import DOMPurify from "dompurify";
 
 interface AdSlotProps {
   pageSlug: string;
@@ -28,12 +29,21 @@ const AdSlot = ({ pageSlug, position, className }: AdSlotProps) => {
 
   return (
     <div className={cn("ad-slot", className)}>
-      {ads.map((ad) => (
-        <div 
-          key={ad.id} 
-          dangerouslySetInnerHTML={{ __html: ad.ad_code }}
-        />
-      ))}
+      {ads.map((ad) => {
+        // Sanitize ad code to prevent XSS attacks
+        const sanitizedCode = DOMPurify.sanitize(ad.ad_code, {
+          ALLOWED_TAGS: ['div', 'span', 'img', 'a', 'iframe', 'script'],
+          ALLOWED_ATTR: ['src', 'href', 'alt', 'class', 'id', 'style', 'width', 'height', 'frameborder', 'async'],
+          ALLOW_DATA_ATTR: true
+        });
+        
+        return (
+          <div 
+            key={ad.id} 
+            dangerouslySetInnerHTML={{ __html: sanitizedCode }}
+          />
+        );
+      })}
     </div>
   );
 };
