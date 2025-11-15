@@ -138,17 +138,17 @@ const BlogPost = () => {
             <AdSlot pageSlug={`/blog/${slug}`} position="topo" />
             
             {post.image_url && (
-              <div className="w-full h-[400px] overflow-hidden rounded-lg mt-8 mb-8">
+              <div className="w-full rounded-lg mt-8 mb-8">
                 <img 
                   src={post.image_url} 
                   alt={`Ilustração: ${post.title}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto rounded-lg"
                 />
               </div>
             )}
             
             <article 
-              className="prose prose-lg max-w-none mt-8 prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground prose-a:text-primary hover:prose-a:text-primary/80"
+              className="prose prose-lg max-w-none mt-8 prose-headings:text-foreground prose-headings:font-bold prose-h1:text-4xl prose-h1:mb-4 prose-h2:text-3xl prose-h2:mb-3 prose-h2:mt-8 prose-h3:text-2xl prose-h3:mb-2 prose-h3:mt-6 prose-p:text-foreground prose-p:mb-4 prose-strong:text-foreground prose-a:text-primary hover:prose-a:text-primary/80 prose-ul:list-disc prose-ol:list-decimal"
               dangerouslySetInnerHTML={{ 
                 __html: DOMPurify.sanitize(post.content, {
                   ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'strong', 'em', 'ul', 'ol', 'li', 'img', 'blockquote', 'code', 'pre', 'br', 'hr', 'span', 'div', 'b', 'i', 'u'],
