@@ -119,7 +119,7 @@ export type Database = {
             foreignKeyName: "posts_author_id_fkey"
             columns: ["author_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "authors"
             referencedColumns: ["id"]
           },
         ]
