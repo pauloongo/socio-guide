@@ -53,6 +53,12 @@ const Sitemap = () => {
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>${baseUrl}/simulador-bolsa-familia-2026</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
     <loc>${baseUrl}/sobre</loc>
     <lastmod>${today}</lastmod>
     <changefreq>monthly</changefreq>

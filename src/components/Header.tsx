@@ -10,7 +10,12 @@ const Header = () => {
             Socio-Guide
           </Link>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Link to="/simulador-bolsa-familia-2026">
+              <Button variant="default" size="sm" className="hidden md:inline-flex">
+                Simular 2026
+              </Button>
+            </Link>
             <Link to="/blog">
               <Button variant="ghost">Blog</Button>
             </Link>
