@@ -54,9 +54,9 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>Auxílios BR 2025 | Simulador Bolsa Família, INSS e BPC LOAS</title>
-        <meta name="description" content="Guia completo de benefícios sociais 2025. Simule Bolsa Família, INSS e BPC grátis. Informações atualizadas sobre seus direitos." />
-        <meta name="keywords" content="benefícios sociais 2025, bolsa família simulador, inss aposentadoria, bpc loas, auxílios brasil, simulador grátis" />
+        <title>Simulador Bolsa Família 2025 e 2026, INSS e BPC | Auxílios BR</title>
+        <meta name="description" content="Simule Bolsa Família, aposentadoria INSS e BPC LOAS grátis. Informações atualizadas sobre benefícios sociais, calendários e como solicitar em 2025." />
+        <meta name="keywords" content="bolsa família 2025, simulador inss, bpc loas, benefícios sociais, calendário pagamento, bolsa família 2026" />
         
         {/* Open Graph */}
         <meta property="og:title" content="Auxílios BR 2025 | Simulador Bolsa Família, INSS e BPC LOAS" />
@@ -77,17 +77,26 @@ const Home = () => {
         {/* Canonical */}
         <link rel="canonical" href="https://auxiliosbr.com.br" />
         
-        {/* Open Graph */}
-        <meta property="og:title" content="Auxílios BR 2025 | Simulador Bolsa Família, INSS e BPC LOAS" />
-        <meta property="og:description" content="Guia completo de benefícios sociais 2025. Simule Bolsa Família, INSS e BPC grátis." />
-        <meta property="og:image" content="/placeholder.svg" />
-        <meta property="og:type" content="website" />
-        
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Auxílios BR 2025 | Simulador Bolsa Família, INSS e BPC LOAS" />
-        <meta name="twitter:description" content="Guia completo de benefícios sociais 2025. Simule Bolsa Família, INSS e BPC grátis." />
-        <meta name="twitter:image" content="/placeholder.svg" />
+        {/* Schema JSON-LD */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Auxílios BR",
+            "url": "https://auxiliosbr.com.br",
+            "description": "Guia completo de benefícios sociais 2025 e 2026. Simuladores grátis de Bolsa Família, INSS e BPC LOAS.",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://auxiliosbr.com.br/blog?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "Auxílios BR",
+              "url": "https://auxiliosbr.com.br"
+            }
+          })}
+        </script>
         
         {/* Canonical */}
         <link rel="canonical" href={window.location.href} />
@@ -100,10 +109,11 @@ const Home = () => {
         <div className="container mx-auto max-w-6xl">
           <div className="flex flex-col items-center text-center text-primary-foreground">
             <h1 className="mb-6 text-4xl md:text-6xl font-bold animate-fade-in">
-              Benefícios Sociais 2025
+              Simulador Bolsa Família 2026, INSS e BPC: Calcule Seus Benefícios Grátis
             </h1>
             <p className="mb-8 text-lg md:text-xl max-w-2xl animate-fade-in opacity-95">
-              Simule Bolsa Família, INSS e BPC grátis. Informações atualizadas sobre seus direitos.
+              Descubra se você tem direito a benefícios sociais em 2025 e 2026. Simule Bolsa Família, 
+              aposentadoria INSS e BPC LOAS de forma rápida, gratuita e com informações atualizadas do gov.br.
             </p>
             <div className="flex gap-4 flex-wrap justify-center">
               <Button asChild variant="hero" size="lg">
@@ -125,9 +135,9 @@ const Home = () => {
               <div className="flex justify-center mb-4">
                 <Calculator className="h-12 w-12 text-primary" />
               </div>
-              <CardTitle className="text-3xl">Simulador Bolsa Família</CardTitle>
+              <CardTitle className="text-3xl">Simulador Bolsa Família 2025</CardTitle>
               <CardDescription className="text-base">
-                Descubra se você tem direito e qual o valor estimado para novembro de 2025
+                Descubra se você tem direito e qual o valor estimado. Para simulação 2026 completa, <Link to="/simulador-bolsa-familia-2026" className="text-primary underline font-semibold">clique aqui</Link>
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -225,9 +235,13 @@ const Home = () => {
       {/* Posts em Destaque */}
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-center mb-12">Todos os Posts</h2>
+          <h2 className="text-3xl font-bold text-center mb-4">Guias Completos sobre Benefícios Sociais 2025</h2>
+          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+            Artigos atualizados com informações oficiais do gov.br, MDS e INSS. 
+            Aprenda como solicitar, consultar e receber seus benefícios.
+          </p>
           <div className="grid md:grid-cols-3 gap-6">
-            {posts?.map((post) => (
+            {posts?.slice(0, 6).map((post) => (
               <Card key={post.id} className="shadow-card hover:shadow-lg transition-all animate-fade-in">
                 {post.image_url && (
                   <div className="w-full h-48 overflow-hidden rounded-t-lg">
@@ -253,20 +267,18 @@ const Home = () => {
                     {post.excerpt || post.content.replace(/<[^>]*>/g, "").substring(0, 150)}...
                   </p>
                   <Button asChild variant="secondary" className="w-full">
-                    <Link to={`/blog/${post.slug}`}>Ler mais</Link>
+                    <Link to={`/blog/${post.slug}`}>Ler guia completo →</Link>
                   </Button>
                 </CardContent>
               </Card>
             ))}
           </div>
           
-          {posts && posts.length > 8 && (
-            <div className="text-center mt-8">
-              <Button asChild size="lg" variant="default">
-                <Link to="/blog">Ver Todos os Posts no Blog</Link>
-              </Button>
-            </div>
-          )}
+          <div className="text-center mt-12">
+            <Button asChild size="lg" variant="default">
+              <Link to="/blog">Ver Todos os Guias no Blog →</Link>
+            </Button>
+          </div>
         </div>
       </section>
       </div>
