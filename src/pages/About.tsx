@@ -27,6 +27,25 @@ const About = () => {
         <title>Sobre Nós | Especialistas em Benefícios Sociais 2025</title>
         <meta name="description" content="Conheça nossa equipe de especialistas certificados em benefícios sociais. Informações atualizadas sobre Bolsa Família, INSS e BPC LOAS com fontes oficiais gov.br." />
         <meta name="keywords" content="equipe benefícios sociais, especialistas inss, consultores gov.br, informações oficiais previdência" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Sobre Nós | Especialistas em Benefícios Sociais 2025" />
+        <meta property="og:description" content="Conheça nossa equipe de especialistas certificados em benefícios sociais. Informações atualizadas sobre Bolsa Família, INSS e BPC LOAS com fontes oficiais gov.br." />
+        <meta property="og:image" content="https://auxiliosbr.com.br/placeholder.svg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:url" content="https://auxiliosbr.com.br/sobre" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Auxílios BR" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Sobre Nós | Especialistas em Benefícios Sociais 2025" />
+        <meta name="twitter:description" content="Conheça nossa equipe de especialistas certificados em benefícios sociais. Informações atualizadas sobre Bolsa Família, INSS e BPC LOAS com fontes oficiais gov.br." />
+        <meta name="twitter:image" content="https://auxiliosbr.com.br/placeholder.svg" />
+        
+        {/* Canonical */}
+        <link rel="canonical" href="https://auxiliosbr.com.br/sobre" />
       </Helmet>
 
       <div className="min-h-screen bg-background">

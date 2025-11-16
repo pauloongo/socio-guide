@@ -28,6 +28,26 @@ const Contact = () => {
       <Helmet>
         <title>Contato | Socio-Guide - Tire suas Dúvidas</title>
         <meta name="description" content="Entre em contato com nossa equipe de especialistas em benefícios sociais. Tire suas dúvidas sobre Bolsa Família, INSS e BPC LOAS." />
+        <meta name="keywords" content="contato benefícios sociais, dúvidas inss, atendimento bolsa família, suporte gov.br" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Contato | Socio-Guide - Tire suas Dúvidas" />
+        <meta property="og:description" content="Entre em contato com nossa equipe de especialistas em benefícios sociais. Tire suas dúvidas sobre Bolsa Família, INSS e BPC LOAS." />
+        <meta property="og:image" content="https://auxiliosbr.com.br/placeholder.svg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:url" content="https://auxiliosbr.com.br/contato" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Auxílios BR" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contato | Socio-Guide - Tire suas Dúvidas" />
+        <meta name="twitter:description" content="Entre em contato com nossa equipe de especialistas em benefícios sociais. Tire suas dúvidas sobre Bolsa Família, INSS e BPC LOAS." />
+        <meta name="twitter:image" content="https://auxiliosbr.com.br/placeholder.svg" />
+        
+        {/* Canonical */}
+        <link rel="canonical" href="https://auxiliosbr.com.br/contato" />
       </Helmet>
 
       <div className="min-h-screen bg-background">

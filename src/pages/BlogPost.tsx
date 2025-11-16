@@ -50,6 +50,9 @@ const BlogPost = () => {
 
   const description = post.excerpt || post.content.replace(/<[^>]*>/g, "").substring(0, 160);
   const keywords = post.keywords || `benefícios sociais 2025, ${post.title.toLowerCase().split(' ').slice(0, 5).join(', ')}`;
+  const baseUrl = "https://auxiliosbr.com.br";
+  const pageUrl = `${baseUrl}/blog/${slug}`;
+  const imageUrl = post.image_url ? (post.image_url.startsWith('http') ? post.image_url : `${baseUrl}${post.image_url}`) : `${baseUrl}/placeholder.svg`;
 
   return (
     <>
@@ -61,17 +64,23 @@ const BlogPost = () => {
         {/* Open Graph */}
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={description} />
-        <meta property="og:image" content={post.image_url || '/placeholder.svg'} />
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:url" content={pageUrl} />
         <meta property="og:type" content="article" />
+        <meta property="og:site_name" content="Benefícios Sociais" />
+        {post.date && <meta property="article:published_time" content={post.date} />}
+        {post.updated_at && <meta property="article:modified_time" content={post.updated_at} />}
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={post.image_url || '/placeholder.svg'} />
+        <meta name="twitter:image" content={imageUrl} />
         
         {/* Canonical */}
-        <link rel="canonical" href={window.location.href} />
+        <link rel="canonical" href={pageUrl} />
         
         <script type="application/ld+json">
           {JSON.stringify({
@@ -138,17 +147,18 @@ const BlogPost = () => {
             <AdSlot pageSlug={`/blog/${slug}`} position="topo" />
             
             {post.image_url && (
-              <div className="w-full rounded-lg mt-8 mb-8">
+              <div className="w-full rounded-lg mt-8 mb-8 overflow-hidden">
                 <img 
                   src={post.image_url} 
                   alt={`Ilustração: ${post.title}`}
-                  className="w-full h-auto rounded-lg"
+                  className="w-full h-auto rounded-lg object-contain"
+                  loading="lazy"
                 />
               </div>
             )}
             
             <article 
-              className="prose prose-lg max-w-none mt-8 prose-headings:text-foreground prose-headings:font-bold prose-h1:text-4xl prose-h1:mb-4 prose-h2:text-3xl prose-h2:mb-3 prose-h2:mt-8 prose-h3:text-2xl prose-h3:mb-2 prose-h3:mt-6 prose-p:text-foreground prose-p:mb-4 prose-strong:text-foreground prose-a:text-primary hover:prose-a:text-primary/80 prose-ul:list-disc prose-ol:list-decimal"
+              className="prose prose-lg max-w-none mt-8 prose-headings:text-foreground prose-headings:font-bold prose-h1:text-4xl prose-h1:mb-4 prose-h2:text-3xl prose-h2:mb-3 prose-h2:mt-8 prose-h3:text-2xl prose-h3:mb-2 prose-h3:mt-6 prose-p:text-foreground prose-p:mb-4 prose-strong:text-foreground prose-a:text-primary hover:prose-a:text-primary/80 prose-ul:list-disc prose-ol:list-decimal prose-img:w-full prose-img:h-auto prose-img:object-contain prose-img:rounded-lg"
               dangerouslySetInnerHTML={{ 
                 __html: DOMPurify.sanitize(post.content, {
                   ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'strong', 'em', 'ul', 'ol', 'li', 'img', 'blockquote', 'code', 'pre', 'br', 'hr', 'span', 'div', 'b', 'i', 'u'],
