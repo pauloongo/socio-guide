@@ -60,6 +60,25 @@ const Home = () => {
         
         {/* Open Graph */}
         <meta property="og:title" content="Auxílios BR 2025 | Simulador Bolsa Família, INSS e BPC LOAS" />
+        <meta property="og:description" content="Guia completo de benefícios sociais 2025. Simule Bolsa Família, INSS e BPC grátis. Informações atualizadas sobre seus direitos." />
+        <meta property="og:image" content="https://auxiliosbr.com.br/placeholder.svg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:url" content="https://auxiliosbr.com.br" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Auxílios BR" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Auxílios BR 2025 | Simulador Bolsa Família, INSS e BPC LOAS" />
+        <meta name="twitter:description" content="Guia completo de benefícios sociais 2025. Simule Bolsa Família, INSS e BPC grátis. Informações atualizadas sobre seus direitos." />
+        <meta name="twitter:image" content="https://auxiliosbr.com.br/placeholder.svg" />
+        
+        {/* Canonical */}
+        <link rel="canonical" href="https://auxiliosbr.com.br" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Auxílios BR 2025 | Simulador Bolsa Família, INSS e BPC LOAS" />
         <meta property="og:description" content="Guia completo de benefícios sociais 2025. Simule Bolsa Família, INSS e BPC grátis." />
         <meta property="og:image" content="/placeholder.svg" />
         <meta property="og:type" content="website" />
