@@ -10,6 +10,7 @@ import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Calculadoras from "./pages/Calculadoras";
 import Sitemap from "./pages/Sitemap";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/sobre" element={<About />} />
           <Route path="/contato" element={<Contact />} />
+          <Route path="/calculadoras" element={<Calculadoras />} />
           <Route path="/sitemap.xml" element={<Sitemap />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<Admin />} />
