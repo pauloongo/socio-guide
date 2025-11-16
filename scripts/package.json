@@ -1,0 +1,9 @@
+{
+  "name": "sitemap-generator",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Script to generate sitemap.xml",
+  "scripts": {
+    "generate": "node generate-sitemap.js"
+  }
+}
