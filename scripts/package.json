@@ -5,5 +5,8 @@
   "description": "Script to generate sitemap.xml",
   "scripts": {
     "generate": "node generate-sitemap.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.80.0"
   }
 }

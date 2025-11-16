@@ -6,19 +6,24 @@ Este script gera o arquivo `sitemap.xml` estático para o site.
 
 ### Localmente
 
-1. Certifique-se de que as variáveis de ambiente estão configuradas:
+1. Instale as dependências:
+   ```bash
+   cd scripts
+   npm install
+   ```
+
+2. Certifique-se de que as variáveis de ambiente estão configuradas:
    ```bash
    export VITE_SUPABASE_URL="sua_url"
    export VITE_SUPABASE_PUBLISHABLE_KEY="sua_chave"
    ```
 
-2. Execute o script:
+3. Execute o script:
    ```bash
-   cd scripts
    npm run generate
    ```
 
-3. O sitemap será gerado em `public/sitemap.xml`
+4. O sitemap será gerado em `public/sitemap.xml`
 
 ### Com Cron Job
 
