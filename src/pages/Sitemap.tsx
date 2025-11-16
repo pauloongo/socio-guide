@@ -47,6 +47,12 @@ const Sitemap = () => {
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>${baseUrl}/calculadoras</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>${baseUrl}/sobre</loc>
     <lastmod>${today}</lastmod>
     <changefreq>monthly</changefreq>

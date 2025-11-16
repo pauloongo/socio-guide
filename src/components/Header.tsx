@@ -14,6 +14,9 @@ const Header = () => {
             <Link to="/blog">
               <Button variant="ghost">Blog</Button>
             </Link>
+            <Link to="/calculadoras">
+              <Button variant="ghost">Calculadoras</Button>
+            </Link>
             <Link to="/sobre">
               <Button variant="ghost">Sobre</Button>
             </Link>
